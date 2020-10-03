@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load staticfiles compress %}
+{% block title %}
+    后台管理
+{% endblock %}
+{% block css %}
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard/dashboard_index.css' %}">
+    {% endcompress %}
+{% endblock %}
+{% block js %}
+    {% compress js %}
+    <script src="{% static 'js/dashboard/dashboard_index.js' %}"></script>
+    {% endcompress %}
+{% endblock %}
+{% block content %}
+    {% include 'dashboard/dashboard_base.html' %}
+
+    <div class="panel panel-default auth-manage">
+        <div class="panel-heading">
+            <h1 class="panel-title" style="font-size: 25px;">用户管理</h1>
+        </div>
+        <div class="panel-body table-responsive">
+            <table class="table table-striped table-responsive table-hover">
+                <tr>
+                    <th>用户名</th>
+                    <th>昵称</th>
+                    <th>邮箱</th>
+                    <th>电话</th>
+                    <th>性别</th>
+                    <th>超级管理员</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                {% for user in users %}
+                    <tr data-userId="{{ user.id }}">
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.setting.nick_name }}</td>
+                        <td>{{ user.setting.email }}</td>
+                        <td>{{ user.setting.phone }}</td>
+                        <td>{{ user.setting.gender }}</td>
+                        <td class="is_super">
+                            {% if user.is_superuser %}
+                                是
+                            {% else %}
+                                否
+                            {% endif %}
+                        </td>
+                        <td style="position: relative;">
+                            {% if user.id != current_user.id %}
+                                {% if user.is_active == 1 %}
+                                    <form class="layui-form layui-form-pane check-form" id="update-status" data-url="{% url 'change_status' %}" style="display: inline-block;position: absolute;top: 0px;left: 0px">
+                                        <input class="layui-form layui-form-pane update-status" type="checkbox" name="zzz" lay-skin="switch" lay-text="可用|禁用" checked>
+                                    </form>
+                                {% else %}
+                                    <form class="layui-form layui-form-pane check-form" id="update-status" data-url="{% url 'change_status' %}" style="display: inline-block;position: absolute;top: 0px;left: 0px">
+                                        <input class="layui-form layui-form-pane" type="checkbox" name="zzz" lay-skin="switch" lay-text="可用|禁用">
+                                    </form>
+                                {% endif %}
+                            {% else %}
+                                {% if user.is_active == 1 %}
+                                    <form class="layui-form layui-form-pane check-form" id="update-status" data-url="{% url 'change_status' %}" style="display: inline-block;position: absolute;top: 0px;left: 0px">
+                                        <input class="layui-form layui-form-pane update-status" type="checkbox" name="zzz" lay-skin="switch" value="1" lay-text="可用|禁用" checked disabled>
+                                    </form>
+                                {% else %}
+                                    <form class="layui-form layui-form-pane check-form" id="update-status" data-url="{% url 'change_status' %}" style="display: inline-block;position: absolute;top: 0px;left: 0px">
+                                        <input class="layui-form layui-form-pane" type="checkbox" name="zzz" lay-skin="switch" lay-text="可用|禁用" value="1" disabled>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
