@@ -21,7 +21,7 @@ $(function () {
                         var element = "<a href=\"/blog/detail/?id="+article_id+"\">\n" +
                             "        <div class=\"panel panel-info single-part\">\n" +
                             "            <div class=\"panel-heading\" style=\"position: relative\">\n" +
-                            "                <h3 style=\"color: #0C1021;width: 50%;margin: 0\" ><p>"+title+"</p><span class=\"other\" style=\"position:absolute;right: 0;bottom:0;font-size: 14px\">"+create_time+"</span></h3>\n" +
+                            "                <h3 style=\"color: #0C1021;width: 50%;margin: 0\" ><p>"+title+"</p><span class=\"other\" style=\"position:absolute;right: 0;bottom:0;fonts-size: 14px\">"+create_time+"</span></h3>\n" +
                             "\n" +
                             "            </div>\n" +
                             "            <div class=\"panel-body\">\n" +

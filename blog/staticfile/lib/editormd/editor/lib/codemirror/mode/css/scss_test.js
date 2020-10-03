@@ -42,7 +42,7 @@
     "[comment /*foobar*/]");
 
   MT('attribute_with_hyphen',
-    "[tag foo] { [property font-size]:[number 10px] }");
+    "[tag foo] { [property fonts-size]:[number 10px] }");
 
   MT('string_after_attribute',
     "[tag foo] { [property content]:[string \"::\"] }");

@@ -31,13 +31,13 @@
      "[tag foo] { [property margin]: [number 0] } [tag bar] { }");
 
   MT("tagStringNoQuotes",
-     "[tag foo] { [property font-family]: [variable hello] [variable world]; }");
+     "[tag foo] { [property fonts-family]: [variable hello] [variable world]; }");
 
   MT("tagStringDouble",
-     "[tag foo] { [property font-family]: [string \"hello world\"]; }");
+     "[tag foo] { [property fonts-family]: [string \"hello world\"]; }");
 
   MT("tagStringSingle",
-     "[tag foo] { [property font-family]: [string 'hello world']; }");
+     "[tag foo] { [property fonts-family]: [string 'hello world']; }");
 
   MT("tagColorKeyword",
      "[tag foo] {",
@@ -100,7 +100,7 @@
 
   MT("indent_comma",
      "[tag foo] {",
-     "  [property font-family]: [variable verdana],",
+     "  [property fonts-family]: [variable verdana],",
      "    [atom sans-serif];",
      "}");
 
@@ -113,8 +113,8 @@
      "}");
 
   MT("font_face",
-     "[def @font-face] {",
-     "  [property font-family]: [string 'myfont'];",
+     "[def @fonts-face] {",
+     "  [property fonts-family]: [string 'myfont'];",
      "  [error nonsense]: [string 'abc'];",
      "  [property src]: [atom url]([string http://blah]),",
      "    [atom url]([string http://foo]);",
@@ -155,7 +155,7 @@
       "      [property background-color]: [keyword white];",
       "    }",
       "    [tag foo] {",
-      "      [property font-family]: [variable Verdana], [atom sans-serif];",
+      "      [property fonts-family]: [variable Verdana], [atom sans-serif];",
       "    }",
       "  }");
 

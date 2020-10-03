@@ -15,7 +15,6 @@
     {% endcompress %}
 </head>
 <body>
-{% cache 3600 sidebar request.user.username %}
 {% csrf_token %}
 <div class="layui-form" data-url="{% url 'create_article' %}" data-userid="{{ user.id }}">
     <div style="width: 8%;border: 1px solid #00aaaa;margin-left: 1px;display: inline-block;">
@@ -70,7 +69,6 @@
 ```
     </textarea>
 </div>
-{% endcache %}
 </body>
 {% compress js %}
     <script src="{% static 'js/jquery-1.12.4.min.js' %}"></script>

@@ -43,7 +43,7 @@
             <div class="col-sm-9 right-part">
                 {% if choose %}
                     <div class="content-top">
-                        <span class="friend-name">{{ choose.setting.nickname }}</span>
+                        <span class="friend-name">{{ choose.setting.nick_name|default:choose.username }}</span>
                     </div>
                     <div class="content-main">
                         {% for conversation in conversation_list %}
