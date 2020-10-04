@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from app.libs.common import video_qiniu
 from app.model.auth import Setting
-from app.model.blog import Article, Tag,Item,Data
+from app.model.blog import Article, Tag, Item, Data
 
 
 class SettingView(View):
@@ -45,16 +45,23 @@ class SettingView(View):
 class UpdateInfo(View):
 
     def post(self, request):
-        nickname = request.POST.get('nickname')
+        nickname = request.POST.get('nickname', '')
         age = request.POST.get('age')
-        gender = request.POST.get('gender')
-        phone = request.POST.get('phone')
-        email = request.POST.get('email')
-        content = request.POST.get('content')
+        if age == '':
+            age = 0
+        gender = request.POST.get('gender', '')
+        phone = request.POST.get('phone', '')
+        email = request.POST.get('email', '')
+        content = request.POST.get('content', '')
         user = request.user
-        setting = Setting.objects.get(id=user.setting.id)
-        setting.updateInfo(nickname, age, gender, phone, email, content)
-        setting.save()
+        if Setting.objects.filter(user=user).exists():
+            setting = Setting.objects.get(id=user.setting.id)
+            setting.updateInfo(nickname, age, gender, phone, email, content)
+            setting.save()
+        else:
+            Setting.objects.create(nick_name=nickname, age=age, gender=gender,
+                                   phone=phone, email=email, content=content, user=user)
+
         return redirect('{}?code=0'.format(reverse('settings')))
 
 
@@ -73,6 +80,7 @@ class MyArticle(View):
             pass
         return render(request, self.TEMPLATE, data)
 
+
 class UpdateBlog(View):
     TEMPLATE = 'user/update_blog.html'
 
@@ -86,11 +94,11 @@ class UpdateBlog(View):
             data['article'] = article[0]
             tags = Tag.objects.all()
             data['tags'] = tags
-            return render(request,self.TEMPLATE,data)
+            return render(request, self.TEMPLATE, data)
 
         return redirect(reverse('my_article'))
 
-    def post(self,request):
+    def post(self, request):
         user_id = request.POST.get('user_id')
         type = request.POST.get('tag')
         title = request.POST.get('title')
@@ -98,7 +106,7 @@ class UpdateBlog(View):
         show_content = request.POST.get('show_content')
         article_id = request.POST.get('article_id')
         tag = Tag.objects.filter(type=type)
-        article = Article.objects.filter(article_id=article_id,user_id=user_id)
+        article = Article.objects.filter(article_id=article_id, user_id=user_id)
         if tag and article:
             article = article[0]
             article.tag = tag[0]
@@ -106,21 +114,22 @@ class UpdateBlog(View):
             article.real_content = real_content
             article.show_content = show_content
             article.save()
-            return JsonResponse({'code':0,'message':'修改成功!'})
+            return JsonResponse({'code': 0, 'message': '修改成功!'})
         else:
-            return JsonResponse({'code':1,'message':'修改失败!'})
+            return JsonResponse({'code': 1, 'message': '修改失败!'})
+
 
 class DeleteBlog(View):
     TEMPLATE = 'user/my_article.html'
 
     @method_decorator(login_required)
-    def get(self,request):
+    def get(self, request):
         user = request.user
-        article_id = request.GET.get('article_id','')
+        article_id = request.GET.get('article_id', '')
         data = {}
         if article_id:
             data['refresh'] = 1
-            article = Article.objects.filter(user=user,article_id=article_id)
+            article = Article.objects.filter(user=user, article_id=article_id)
             if article:
                 article.delete()
             else:
@@ -132,38 +141,40 @@ class DeleteBlog(View):
                 data['articles'] = articles
         except:
             pass
-        return render(request,self.TEMPLATE,data)
+        return render(request, self.TEMPLATE, data)
+
 
 class MyItem(View):
     TEMPLATE = 'user/my_item.html'
 
     @method_decorator(login_required)
-    def get(self,request):
+    def get(self, request):
         user = request.user
         items = Item.objects.filter(user_id=user.id).all()
-        data = {'user':user,'items':items}
-        return render(request,self.TEMPLATE,data)
+        data = {'user': user, 'items': items}
+        return render(request, self.TEMPLATE, data)
 
 
 class DeleteItem(View):
 
     @method_decorator(login_required)
-    def get(self,request):
+    def get(self, request):
         user = request.user
         item_id = request.GET.get('item_id')
         data = {}
         if item_id:
-            item = Item.objects.filter(user=user,item_id=item_id)
+            item = Item.objects.filter(user=user, item_id=item_id)
             if item:
                 item.delete()
-                return JsonResponse({'code':0})
+                return JsonResponse({'code': 0})
             else:
-                return JsonResponse({'code':1,'message':'删除失败!'})
-        return JsonResponse({'code':1,'message':'找不到该项目!'})
+                return JsonResponse({'code': 1, 'message': '删除失败!'})
+        return JsonResponse({'code': 1, 'message': '找不到该项目!'})
+
 
 class UpdateItem(View):
 
-    def post(self,request):
+    def post(self, request):
         user = request.user
         name = request.POST.get('name')
         introduce = request.POST.get('introduce')
@@ -173,29 +184,29 @@ class UpdateItem(View):
             if item_id:
                 item = Item.objects.filter(item_id=item_id)
                 if item:
-                    item=item[0]
-                    item.name=name
-                    item.introduce=introduce
-                    item.file_url=file_url
+                    item = item[0]
+                    item.name = name
+                    item.introduce = introduce
+                    item.file_url = file_url
                     item.save()
-                    return JsonResponse({'code':0})
+                    return JsonResponse({'code': 0})
                 else:
                     return JsonResponse({'code': 1, 'message': '找不到该项目!'})
             else:
-                return JsonResponse({'code':1,'message':'找不到项目id!'})
-        except :
-            return JsonResponse({'code':1,'message':'更新失败!'})
+                return JsonResponse({'code': 1, 'message': '找不到项目id!'})
+        except:
+            return JsonResponse({'code': 1, 'message': '更新失败!'})
 
 
 class MyData(View):
     TEMPLATE = 'user/my_data.html'
 
     @method_decorator(login_required)
-    def get(self,request):
+    def get(self, request):
         user = request.user
         datas = Data.objects.filter(user_id=user.id).all()
-        data = {'user':user,'datas':datas}
-        return render(request,self.TEMPLATE,data)
+        data = {'user': user, 'datas': datas}
+        return render(request, self.TEMPLATE, data)
 
 
 class DeleteData(View):
@@ -206,7 +217,7 @@ class DeleteData(View):
         data_id = request.GET.get('data_id')
         data = {}
         if data_id:
-            data_ = Data.objects.filter(user=user,data_id=data_id)
+            data_ = Data.objects.filter(user=user, data_id=data_id)
             if data_:
                 data_.delete()
                 return JsonResponse({'code': 0})

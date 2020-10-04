@@ -4,12 +4,12 @@ from django.contrib.auth.models import User
 
 class Setting(models.Model):
     age = models.IntegerField(default=0)
-    nick_name = models.CharField(max_length=50,default='')
-    gender = models.CharField(max_length=10,default='')
-    head_img = models.CharField(max_length=500,default='https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=38616266,2952961838&fm=26&gp=0.jpg',db_index=True)
-    content = models.TextField(default='该用户很懒,什么也没写!')
-    phone = models.CharField(max_length=20)
-    email = models.EmailField(default='')
+    nick_name = models.CharField(max_length=50,default='',blank=True,null=True)
+    gender = models.CharField(max_length=10,default='',blank=True,null=True)
+    head_img = models.CharField(max_length=500,blank=True,null=True,default='https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=38616266,2952961838&fm=26&gp=0.jpg',db_index=True)
+    content = models.TextField(default='该用户很懒,什么也没写!',blank=True,null=True)
+    phone = models.CharField(max_length=20,blank=True,null=True)
+    email = models.CharField(max_length=255,blank=True,null=True,default='')
     update_time = models.DateTimeField(auto_now=True)
     user = models.OneToOneField(User,blank=True,null=True,on_delete=models.SET_NULL,related_name='setting')
 
